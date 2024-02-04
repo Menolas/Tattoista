@@ -30,8 +30,9 @@ import {
   getClientsPageSizeSelector, getIsDeletingPicturesInProcessSelector
 } from "../../../redux/Clients/clients-selectors"
 import { Clients } from "./Clients"
-import {getTokenSelector} from "../../../redux/Auth/auth-selectors";
-import {getAccessErrorSelector} from "../../../redux/bookedConsultations/bookedConsultations-selectors";
+import {getTokenSelector} from "../../../redux/Auth/auth-selectors"
+import {getAccessErrorSelector} from "../../../redux/bookedConsultations/bookedConsultations-selectors"
+import {getFakeApiSelector} from "../../../redux/Auth/auth-selectors"
 
 export const ClientsContainer: React.FC = () => {
 
@@ -48,6 +49,7 @@ export const ClientsContainer: React.FC = () => {
   const updateClientGalleryApiError = useSelector(getUpdateClientGalleryApiErrorSelector)
   const token = useSelector(getTokenSelector)
   const accessError = useSelector(getAccessErrorSelector)
+  const fakeApi = useSelector(getFakeApiSelector)
 
   const dispatch = useDispatch()
 
@@ -122,6 +124,7 @@ export const ClientsContainer: React.FC = () => {
 
   return (
       <Clients
+          fakeApi={fakeApi}
           isFetching={isFetching}
           isSuccess={isSuccess}
           totalCount={totalCount}

@@ -3,6 +3,10 @@ export type RoleType = {
     value: string
 }
 
+export type CreatedAtType = {
+    $date: string
+}
+
 export type IUser = {
     displayName: string | undefined
     isActivated: boolean
@@ -13,9 +17,10 @@ export type UserType = {
     "_id": string
     displayName: string
     email: string
+    password: string
     isActivated: boolean
-    avatar: string
     roles: Array<RoleType> | Array<String>
+    avatar?: string
 }
 
 export interface ContactType {
@@ -23,20 +28,20 @@ export interface ContactType {
 }
 
 export type ContactsType = {
-    email: string | undefined
-    insta: string | undefined
-    messenger: string | undefined
-    phone: string | undefined
-    whatsapp: string | undefined
+    email?: string | undefined
+    insta?: string | undefined
+    messenger?: string | undefined
+    phone?: string | undefined
+    whatsapp?: string | undefined
 }
 
 export type ClientType = {
     _id: string
     fullName: string
-    createdAt?: any
-    contacts: ContactType
-    avatar?: File | string
+    contacts: ContactsType
     gallery?: Array<string>
+    createdAt?: CreatedAtType
+    avatar?: File | string
 }
 
 export type BookedConsultationType = {
@@ -44,7 +49,7 @@ export type BookedConsultationType = {
     fullName: string
     message?: string
     status?: boolean
-    createdAt?: string
+    createdAt?: CreatedAtType
     contacts: {},
 }
 
@@ -69,15 +74,11 @@ export type TattooStyleType = {
     nonStyle: boolean
 }
 
-export type GalleryCreatedAtType = {
-    $date: string
-}
-
 export type GalleryItemType = {
     _id: string
     fileName: string
     tattooStyles: Array<String>
-    createdAt?: GalleryCreatedAtType
+    createdAt?: CreatedAtType
 }
 
 export interface RegistrationFormValues {

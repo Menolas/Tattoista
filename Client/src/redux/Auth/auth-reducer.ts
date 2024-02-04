@@ -4,6 +4,7 @@ import { ThunkAction } from "redux-thunk"
 import { AppStateType } from "../redux-store"
 import { LoginFormValues, RegistrationFormValues} from "../../types/Types"
 import { IUser } from "../../types/Types"
+import { user } from "../../data/UserData"
 
 const SET_USER_DATA = 'SET_USER_DATE'
 const SET_AUTH = 'SET_AUTH'
@@ -11,6 +12,7 @@ const SET_ACCESS_TOKEN = 'SET_ACCESS_TOKEN'
 const SET_IS_SUCCESS = 'SET_IS_SUCCESS'
 const SET_REGISTRATION_ERROR = 'SET_REGISTRATION_ERROR'
 const SET_LOGIN_ERROR = 'SET_LOGIN_ERROR'
+const SET_FAKE_API = 'SET_FAKE_API'
 
 let initialState = {
   user: {} as IUser | null,
@@ -18,7 +20,8 @@ let initialState = {
   isAuth: false as boolean,
   isSuccess: false as boolean,
   registrationError: '' as string | undefined,
-  loginError: '' as string | undefined
+  loginError: '' as string | undefined,
+  fakeApi: false as boolean
 }
 
 export type InitialStateType = typeof initialState
@@ -66,13 +69,29 @@ export const authReducer = (
         registrationError: action.error
       }
 
+    case SET_FAKE_API:
+      return {
+        ...state,
+        fakeApi: action.fakeApi
+      }
+
     default: return state
   }
 }
 
 type ActionsTypes = SetLoginErrorAT | SetRegistrationErrorAT | SetIsSuccessAT | SetTokenAT | SetUserDataAT | SetAuthAT
+     | SetFakeApiAT
 
 // actions creators
+
+type SetFakeApiAT = {
+  type: typeof SET_FAKE_API
+  fakeApi: boolean
+}
+
+const setFakeApiAC = (fakeApi: boolean): SetFakeApiAT => ({
+  type: SET_FAKE_API, fakeApi
+})
 
 type SetLoginErrorAT = {
   type: typeof SET_LOGIN_ERROR
@@ -137,18 +156,10 @@ export type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, Action
 export const login = (values: LoginFormValues): ThunkType => async (
     dispatch
 ) => {
-  try {
-    let response = await authAPI.login(values)
-    if(response.resultCode === 0) {
-      dispatch(setLoginErrorAC(''))
-      dispatch(setUserDataAC(response.userData.user))
-      dispatch(setAuth(true))
-      dispatch(setAccessTokenAC(response.userData.accessToken))
-    }
-  } catch (e) {
-    // @ts-ignore
-    dispatch(setLoginErrorAC(e.response.data.message))
-  }
+    dispatch(setFakeApiAC(true))
+    dispatch(setLoginErrorAC(''))
+    dispatch(setUserDataAC(user))
+    dispatch(setAuth(true))
 }
 
 export const logout = (): ThunkType => async (

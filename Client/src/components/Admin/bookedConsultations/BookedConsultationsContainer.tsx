@@ -28,8 +28,9 @@ import {
   getAddBookingApiErrorSelector, getAccessErrorSelector
 } from "../../../redux/bookedConsultations/bookedConsultations-selectors"
 import { BookedConsultations } from "./BookedConsultations"
-import {AddConsultationFormValues, BookedConsultationType, ContactsType} from '../../../types/Types'
-import {getTokenSelector} from "../../../redux/Auth/auth-selectors";
+import {AddConsultationFormValues, ContactsType} from '../../../types/Types'
+import {getTokenSelector} from "../../../redux/Auth/auth-selectors"
+import {getFakeApiSelector} from "../../../redux/Auth/auth-selectors"
 
 export const BookedConsultationsContainer: React.FC = () => {
 
@@ -45,6 +46,7 @@ export const BookedConsultationsContainer: React.FC = () => {
   const addBookingApiError = useSelector(getAddBookingApiErrorSelector)
   const token = useSelector(getTokenSelector)
   const accessError = useSelector(getAccessErrorSelector)
+  const fakeApi = useSelector(getFakeApiSelector)
 
   const dispatch = useDispatch()
 
@@ -113,6 +115,7 @@ export const BookedConsultationsContainer: React.FC = () => {
 
   return (
       <BookedConsultations
+        fakeApi={fakeApi}
         isFetching={isFetching}
         isSuccess={isSuccess}
         totalCount={totalCount}

@@ -5,6 +5,7 @@ import { AppStateType } from "../redux-store"
 import { ThunkAction } from "redux-thunk"
 import type {} from "redux-thunk/extend-redux"
 import {getNewPage} from "../../utils/functions"
+import { bookings } from "../../data/BookingsData"
 
 const SET_BOOKED_CONSULTATIONS_PAGE_SIZE = 'SET_BOOKED_CONSULTATIONS_PAGE_SIZE'
 const SET_ARCHIVED_CONSULTATIONS_PAGE_SIZE = 'SET_ARCHIVED_CONSULTATIONS_PAGE_SIZE'
@@ -479,7 +480,9 @@ export const getBookedConsultations = (
     }
   } catch (e) {
     // @ts-ignore
-    dispatch(setAccessErrorAC(e.response.data.message))
+    //dispatch(setAccessErrorAC(e.response.data.message))
+    dispatch(setBookedConsultationsAC(bookings))
+    dispatch(setBookedConsultationsTotalCountAC(bookings.length))
     console.log(e)
   } finally {
     dispatch(setIsFetchingAC(false))

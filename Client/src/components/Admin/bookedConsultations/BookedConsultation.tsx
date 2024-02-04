@@ -8,6 +8,7 @@ import {ModalPopUp} from "../../common/ModalPopUp"
 import {Confirmation} from "../../common/Confirmation"
 
 type PropsType = {
+  fakeApi: boolean
   consultation: BookedConsultationType
   pageSize: number
   currentPage: number
@@ -20,6 +21,7 @@ type PropsType = {
 }
 
 export const BookedConsultation: React.FC<PropsType> = React.memo(({
+    fakeApi,
     consultation,
     pageSize,
     currentPage,
@@ -53,6 +55,10 @@ export const BookedConsultation: React.FC<PropsType> = React.memo(({
 
     })
 
+    const bookingCreated = !fakeApi
+        ? ''
+        : consultation.createdAt.$date.split('T')[0] + ' (' + consultation.createdAt.$date.split('T')[1].split('.')[0] + ')'
+
   return (
     <li className="admin__card">
       <div className="admin__card-details">
@@ -60,7 +66,7 @@ export const BookedConsultation: React.FC<PropsType> = React.memo(({
           <span className={"admin__card__data-type"}>Name:&nbsp;</span>
           <span>{consultation.fullName}</span>
         </div>
-        <div>{consultation.createdAt.split('T')[0] + ' (' + consultation.createdAt.split('T')[1].split('.')[0] + ')'}</div>
+        <div>{}</div>
         <div>
           <ul className="list">
             { contacts }

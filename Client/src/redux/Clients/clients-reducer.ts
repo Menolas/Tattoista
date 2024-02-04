@@ -5,6 +5,7 @@ import { AppStateType } from "../redux-store"
 import { ThunkAction } from "redux-thunk"
 import type {} from "redux-thunk/extend-redux"
 import {getNewPage} from "../../utils/functions"
+import { clients } from "../../data/ClientsData"
 
 const SET_CLIENTS_PAGE_SIZE = 'SET_CLIENTS_PAGE_SIZE'
 const SET_ARCHIVED_CLIENTS_PAGE_SIZE = 'SET_ARCHIVED_CLIENTS_PAGE_SIZE'
@@ -513,8 +514,11 @@ export const getClients = (
     }
   } catch (e) {
     // @ts-ignore
-    dispatch(setAccessErrorAC(e.response.data.message))
+    //(setAccessErrorAC(e.response.data.message))
     console.log(e)
+    dispatch(setAccessErrorAC(''))
+    dispatch(setClientsAC(clients))
+    dispatch(setClientsTotalCountAC(clients.length))
   } finally {
     dispatch(setIsFetchingAC(false))
   }

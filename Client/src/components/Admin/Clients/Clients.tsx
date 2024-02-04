@@ -15,6 +15,7 @@ import {clientFilterSelectOptions} from "../../../utils/constants"
 import {Navigate} from "react-router";
 
 type PropsType = {
+  fakeApi: boolean
   isFetching: boolean
   isSuccess: boolean
   totalCount: number
@@ -42,6 +43,7 @@ type PropsType = {
 }
 
 export const Clients: React.FC<PropsType> = React.memo(({
+    fakeApi,
     isFetching,
     isSuccess,
     totalCount,
@@ -89,6 +91,7 @@ export const Clients: React.FC<PropsType> = React.memo(({
       .map(client => {
         return (
             <Client
+                fakeApi={fakeApi}
                 key={client._id}
                 client={client}
                 isDeletingInProcess={isDeletingInProcess}

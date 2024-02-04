@@ -14,6 +14,7 @@ import { Tooltip } from "react-tooltip"
 import { Confirmation } from "../../common/Confirmation"
 
 type PropsType = {
+  fakeApi: boolean
   client: ClientType
   pageSize: number
   currentPage: number
@@ -27,13 +28,12 @@ type PropsType = {
 }
 
 export const Client: React.FC<PropsType> = React.memo(({
+  fakeApi,
   client,
   isDeletingInProcess,
   isDeletingPicturesInProcess,
   deleteClient,
   editClient,
-  pageSize,
-  currentPage,
   updateClientGallery,
   deleteClientGalleryPicture,
   archiveClient,
@@ -76,7 +76,9 @@ export const Client: React.FC<PropsType> = React.memo(({
       </li> : null
   })
 
-  const clientAvatar = client.avatar ? `${API_URL}/clients/${client._id}/avatar/${client.avatar}` : avatar
+  const clientAvatar = !fakeApi
+      ? client.avatar ? `${API_URL}/clients/${client._id}/avatar/${client.avatar}` : avatar
+      : avatar
 
   const deleteClientCallBack = () => {
     deleteClient(client._id)
@@ -121,7 +123,6 @@ export const Client: React.FC<PropsType> = React.memo(({
               className={"btn btn--icon"}
               disabled={isDeletingInProcess?.some(id => id === client._id)}
               onClick={() => {
-
                 archiveClient(client._id)
               }}
           >
@@ -156,7 +157,10 @@ export const Client: React.FC<PropsType> = React.memo(({
                         key={item}
                         onClick={() => { showBigImg(item) }}
                     >
-                      <img src={`${API_URL}/clients/${client._id}/doneTattooGallery/${item}`} alt={''}/>
+                      <img
+                          src={ !fakeApi ? `${API_URL}/clients/${client._id}/doneTattooGallery/${item}` : '../uploads/gallery/1705904624156_917c51b5b854.jpg'}
+                          alt={''}
+                      />
                     </li>
                 )
               })

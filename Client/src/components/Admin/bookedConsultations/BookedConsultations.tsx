@@ -17,6 +17,7 @@ import {SearchFilterForm} from "../../Forms/SearchFilterForm"
 import { bookingFilterSelectOptions } from "../../../utils/constants"
 
 type PropsType = {
+  fakeApi: boolean
   isFetching: boolean
   isSuccess: boolean
   totalCount: number
@@ -41,6 +42,7 @@ type PropsType = {
 }
 
 export const BookedConsultations: React.FC<PropsType> = React.memo(({
+  fakeApi,
   isFetching,
   isSuccess,
   totalCount,
@@ -85,6 +87,7 @@ export const BookedConsultations: React.FC<PropsType> = React.memo(({
     const bookedConsultationsArray = bookedConsultations?.map(consultation => {
       return (
         <BookedConsultation
+          fakeApi={fakeApi}
           key={consultation._id}
           consultation={consultation}
           pageSize={pageSize}
