@@ -1,8 +1,6 @@
 import * as React from "react"
 import {useState} from "react"
 // @ts-ignore
-import avatar from "../../../assets/img/fox.webp"
-// @ts-ignore
 import Sprite from "../../../assets/svg/sprite.svg"
 import { NavLink } from "react-router-dom"
 import { ClientType, ContactType } from "../../../types/Types"
@@ -77,8 +75,8 @@ export const Client: React.FC<PropsType> = React.memo(({
   })
 
   const clientAvatar = !fakeApi
-      ? client.avatar ? `${API_URL}/clients/${client._id}/avatar/${client.avatar}` : avatar
-      : avatar
+      ? client.avatar ? `${API_URL}/clients/${client._id}/avatar/${client.avatar}` : '../uploads/fox.webp'
+      : '../uploads/fox.webp'
 
   const deleteClientCallBack = () => {
     deleteClient(client._id)
@@ -158,7 +156,9 @@ export const Client: React.FC<PropsType> = React.memo(({
                         onClick={() => { showBigImg(item) }}
                     >
                       <img
-                          src={ !fakeApi ? `${API_URL}/clients/${client._id}/doneTattooGallery/${item}` : '../uploads/gallery/1705904624156_917c51b5b854.jpg'}
+                          src={ !fakeApi
+                              ? `${API_URL}/clients/${client._id}/doneTattooGallery/${item}`
+                              : '../uploads/gallery/1705904624156_917c51b5b854.jpg'}
                           alt={''}
                       />
                     </li>
@@ -217,7 +217,12 @@ export const Client: React.FC<PropsType> = React.memo(({
                   onClick={() => { closeBigImg() }}>
                 {''}
               </button>
-              <img src={`${API_URL}/clients/${client._id}/doneTattooGallery/${bigImg}`} alt={''} />
+              <img
+                  src={ !fakeApi
+                      ? `${API_URL}/clients/${client._id}/doneTattooGallery/${bigImg}`
+                      : '../uploads/gallery/1705904624156_917c51b5b854.jpg'}
+                  alt={''}
+              />
             </div>
           </div>
       }
