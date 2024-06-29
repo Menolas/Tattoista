@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Provider} from 'react-redux';
 import {compose} from "redux";
-import {Route, Routes, BrowserRouter } from "react-router-dom";
+import {Route, Routes, BrowserRouter, useNavigate} from "react-router-dom";
 import {store} from "./redux/redux-store";
 import {withRouter} from "./hoc/withRouter";
 import "./assets/scss/style.css";
@@ -26,8 +26,19 @@ import {NoAccess} from "./components/NoAccess";
 import {MainPage} from "./pages/mainPage/MainPage";
 import {Portfolio} from "./pages/portfolio/Portfolio";
 import {MainWrap} from "./components/MainWrap";
+import {useEffect} from "react";
 
 const App = () => {
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const lastKnownRoute = localStorage.getItem('lastKnownRoute');
+
+        if (lastKnownRoute) {
+            navigate(lastKnownRoute);
+        }
+    }, []);
 
     return (
         <SmoothScroll>
@@ -35,8 +46,6 @@ const App = () => {
                 <HeaderContainer />
                 <MainWrap>
                     <Routes>
-                        <Route path='/'
-                               element={<MainPage key={Math.random()}/>} />
                         <Route path={`registration`}
                                element={<RegistrationContainer />} />
                         <Route path={`login`}
@@ -62,6 +71,8 @@ const App = () => {
                         </Route>
                         <Route path="*" element={<NotFound />} />
                         <Route path={`noAccess`} element={<NoAccess />} />
+                        <Route path='/'
+                               element={<MainPage key={Math.random()}/>} />
                     </Routes>
                 </MainWrap>
                 <Contacts />
@@ -70,11 +81,12 @@ const App = () => {
             </React.Suspense>
         </SmoothScroll>
     );
-}
+};
 
 const AppContainer = compose(withRouter)(App);
 
 export const AhTattooistaApp = () => {
+
     return (
         <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Provider store={store}>
@@ -82,4 +94,4 @@ export const AhTattooistaApp = () => {
             </Provider>
         </BrowserRouter>
     );
-}
+};

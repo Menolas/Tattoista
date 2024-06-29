@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Navigate, NavLink} from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getAuthSelector,
