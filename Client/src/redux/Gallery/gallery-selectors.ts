@@ -27,3 +27,7 @@ export const getIsDeletingInProcessSelector = (state: AppStateType) => {
 export const getFakeApiSelector = (state: AppStateType) => {
   return state.gallery.fakeApi;
 }
+
+export const getGalleryApiErrorSelector = (state: AppStateType) => {
+  return state.gallery.apiError;
+}

@@ -8,8 +8,6 @@ import { gallery } from "../../data/GalleryData";
 import {
   setSuccessModalAC,
   SetSuccessModalAT,
-  setApiErrorAC,
-  SetApiErrorAT
 } from "../General/general-reducer";
 
 const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
@@ -21,6 +19,7 @@ const UPDATE_GALLERY = 'UPDATE_GALLERY';
 const UPDATE_GALLERY_ITEM = 'UPDATE_GALLERY_ITEM';
 const DELETE_GALLERY_ITEM = 'DELETE_GALLERY_ITEM';
 const SET_FAKE_API = 'SET_FAKE_API';
+const SET_API_ERROR = 'SET_API_ERROR';
 
 const ADD_GALLERY_ITEMS_SUCCESS = 'You successfully added gallery images';
 const EDIT_GALLERY_ITEM_SUCCESS = 'You successfully edited gallery image';
@@ -33,6 +32,7 @@ let initialState = {
   isDeletingInProcess: [] as Array<string>,
   gallery: [] as GalleryItemType[],
   fakeApi: false as boolean,
+  apiError: null as string | null,
 }
 
 export type InitialStateType = typeof initialState;
@@ -125,17 +125,32 @@ export const galleryReducer = (
         fakeApi: action.fakeApi
       }
 
+    case SET_API_ERROR:
+      return {
+        ...state,
+        apiError: action.error
+      }
+
     default: return {
       ...state
     }
   }
 }
 
-type ActionsTypes = SetApiErrorAT | ToggleIsDeletingInProcessAT | SetSuccessModalAT |
+type ActionsTypes = ToggleIsDeletingInProcessAT | SetSuccessModalAT |
     SetGalleryPageSizeAT | SetCurrentGalleryPageAT | SetIsFetchingAT | SetGalleryAT
-    | UpdateGalleryAT | DeleteGalleryItemAT | UpdateGalleryItemAT | SetFakeApiAT;
+    | UpdateGalleryAT | DeleteGalleryItemAT | UpdateGalleryItemAT | SetFakeApiAT | SetApiErrorAT;
 
 // actions creators
+
+type SetApiErrorAT = {
+    type: typeof SET_API_ERROR;
+    error: string | null;
+}
+
+export const setApiErrorAC = (error: string | null): SetApiErrorAT => ({
+    type: SET_API_ERROR, error
+});
 
 type SetFakeApiAT = {
   type: typeof SET_FAKE_API
@@ -259,6 +274,7 @@ export const getGallery = (
     let response = await galleryApi.getGalleryItems(styleId, currentPage, pageSize)
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(setGalleryAC(response.gallery, response.totalCount, false));
+      dispatch(setApiErrorAC(null));
       return true;
     } else {
       return false;
@@ -285,8 +301,8 @@ export const updateGallery = (
     let response = await galleryApi.adminUpdateGallery(tattooStyle, values);
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(updateGalleryAC(response.gallery));
-      setApiErrorAC(null);
       dispatch(setSuccessModalAC(true, ADD_GALLERY_ITEMS_SUCCESS));
+      dispatch(setApiErrorAC(null));
       return true;
     } else {
       return false;
@@ -362,6 +378,7 @@ export const updateGalleryItem = (
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(updateGalleryItemAC(response.galleryItem, values[activeStyleId]));
       dispatch(setSuccessModalAC(true, EDIT_GALLERY_ITEM_SUCCESS));
+      dispatch(setApiErrorAC(null));
       return true;
     } else {
       return false;

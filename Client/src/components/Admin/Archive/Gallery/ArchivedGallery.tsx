@@ -7,7 +7,7 @@ import {
     getArchivedGallerySelector,
     getCurrentArchivedGalleryPageSelector,
     getIsDeletingInProcessSelector,
-    getTotalArchivedGalleryItemsCountSelector
+    getTotalArchivedGalleryItemsCountSelector, getArchivedGalleryApiErrorSelector
 } from "../../../../redux/ArchivedGallery/archived-gallery-selectors";
 import {getActiveStyleSelector, getStylesSelector,} from "../../../../redux/Styles/styles-selectors";
 import {Paginator} from "../../../common/Paginator";
@@ -41,6 +41,7 @@ export const ArchivedGallery: React.FC = React.memo(() => {
     const styles = useSelector(getStylesSelector);
     const token = useSelector(getTokenSelector);
     const activeStyle = useSelector(getActiveStyleSelector);
+    const apiError = useSelector(getArchivedGalleryApiErrorSelector);
 
     const dispatch = useDispatch();
 
@@ -188,6 +189,7 @@ export const ArchivedGallery: React.FC = React.memo(() => {
                         galleryItem={editGalleryItem}
                         styles={styles}
                         activeStyleId={activeStyle._id}
+                        apiError={apiError}
                         closeModal={closeGalleryItemEditModal}
                     />
                 }
