@@ -14,7 +14,7 @@ import {ApiErrorMessageModal} from "../../common/ApiErrorMessageModal";
 
 type PropsType = {
   clientsApiError: null | string;
-  apiError: null | string;
+  //apiError: null | string;
   isFetching: boolean;
   totalCount: number;
   currentPage: number;
@@ -36,7 +36,7 @@ type PropsType = {
 
 export const Clients: React.FC<PropsType> = React.memo(({
     clientsApiError,
-    apiError,
+    //apiError,
     isFetching,
     totalCount,
     currentPage,
@@ -61,10 +61,10 @@ export const Clients: React.FC<PropsType> = React.memo(({
   const [client, setClient] = useState<ClientType | null>(null);
 
   useEffect(() => {
-    if ((addClientMode || editClientMode) && apiError === null) {
+    if ((addClientMode || editClientMode) && clientsApiError === null) {
         closeModal();
     }
-  }, [apiError]);
+  }, [clientsApiError]);
 
   const closeModal = () => {
     setAddClientMode(false);
@@ -82,12 +82,14 @@ export const Clients: React.FC<PropsType> = React.memo(({
         return (
             <Client
                 key={client._id}
+                apiError={clientsApiError}
                 data={client}
                 isDeletingInProcess={isDeletingInProcess}
                 isDeletingPicturesInProcess={isDeletingPicturesInProcess}
                 remove={remove}
                 archive={archive}
                 setData={setClient}
+                setApiError={setApiError}
                 setEditClientMode={setEditClientMode}
                 deleteGalleryItem={deleteGalleryItem}
             />
@@ -143,7 +145,7 @@ export const Clients: React.FC<PropsType> = React.memo(({
                   >
                       { (editClientMode || addClientMode) &&
                           < UpdateClientForm
-                              apiError={apiError}
+                              apiError={clientsApiError}
                               isEditing={editClientMode}
                               data={client}
                               closeModal={closeModal}

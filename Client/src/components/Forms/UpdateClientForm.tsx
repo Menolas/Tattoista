@@ -135,9 +135,7 @@ export const UpdateClientForm: React.FC<PropsType> = React.memo(({
     } else {
       success = await dispatch(addClient(formData));
     }
-    if (success) {
-        closeModal();
-    }
+    if (success) closeModal();
     actions.setSubmitting(false);
   }
 

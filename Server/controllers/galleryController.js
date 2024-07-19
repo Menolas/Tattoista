@@ -138,7 +138,7 @@ class galleryController {
           await files[key].mv(`./uploads/gallery/${fileNewName}`);
         } catch (error) {
           console.error('An error occurred during file move:', error);
-          throw error; // Propagate the error upwards
+          throw error;
         }
       }
 

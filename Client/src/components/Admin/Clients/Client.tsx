@@ -15,9 +15,11 @@ import {GalleryUploadForm} from "../../Forms/GalleryUploadForm";
 import {DefaultAvatar} from "../../common/DefaultAvatar";
 
 type PropsType = {
+  apiError: null | string;
   data: ClientType;
   isDeletingInProcess: Array<string>;
   isDeletingPicturesInProcess: Array<string>;
+  setApiError: () => void;
   remove: (clientId: string) => void;
   archive: (clientId: string) => void;
   setData: (client: ClientType) => void;
@@ -26,8 +28,10 @@ type PropsType = {
 }
 
 export const Client: React.FC<PropsType> = React.memo(({
+  apiError,
   data,
   isDeletingInProcess,
+  setApiError,
   isDeletingPicturesInProcess,
   remove,
   archive,
@@ -50,15 +54,20 @@ export const Client: React.FC<PropsType> = React.memo(({
 
   const closeModal = () => {
     setConfirmationData({needConfirmation: false, context: ''});
-  }
+  };
+
+  const closeEditGalleryModal = () => {
+    setEditGalleryMode(false);
+    setApiError();
+  };
 
   const archiveCallBack = () => {
       archive(data._id);
-  }
+  };
 
   const removeCallBack = () => {
       remove(data._id);
-  }
+  };
 
   const clientContacts: ContactType = data.contacts;
 
@@ -187,15 +196,18 @@ export const Client: React.FC<PropsType> = React.memo(({
       <ModalPopUp
             isOpen={editGalleryMode}
             modalTitle={'Edit Client Gallery'}
-            closeModal={() => {setEditGalleryMode(false);}}
+            closeModal={closeEditGalleryModal}
       >
         {editGalleryMode &&
             <GalleryUploadForm
+                apiError={apiError}
                 isEditPortfolio={false}
                 client={data}
                 isDeletingPicturesInProcess={isDeletingPicturesInProcess}
                 deleteClientGalleryPicture={deleteGalleryItem}
-                closeModal={() => {setEditGalleryMode(false);}}
+                closeModal={() => {
+                    setEditGalleryMode(false);
+                }}
             />
         }
       </ModalPopUp>

@@ -460,6 +460,7 @@ export const updateClientGallery = (
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(setClientProfile(response.client));
       dispatch(editClientAC(response.client));
+      dispatch(setClientsApiErrorAC(null));
       dispatch(setSuccessModalAC(true, UPDATE_CLIENT_GALLERY_SUCCESS));
       return true;
     } else {
@@ -467,7 +468,8 @@ export const updateClientGallery = (
     }
   } catch (e) {
     const error = e as ApiErrorType;
-    dispatch(setApiErrorAC(error.response?.data?.message));
+    console.log("we have error")
+    dispatch(setClientsApiErrorAC(error.response?.data?.message));
     console.log(error);
     return false;
   } finally {

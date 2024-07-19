@@ -91,14 +91,10 @@ export const ClientsContainer: React.FC = () => {
     dispatch(setClientsApiErrorAC(null));
   };
 
-  const setApiErrorCallBack = () => {
-    dispatch(setApiErrorAC(null));
-  }
-
   return (
       <Clients
           clientsApiError={clientsApiError}
-          apiError={apiError}
+          //apiError={apiError}
           isFetching={isFetching}
           totalCount={totalCount}
           currentPage={currentPage}
@@ -115,7 +111,7 @@ export const ClientsContainer: React.FC = () => {
           deleteGalleryItem={deleteClientGalleryPictureCallBack}
           archive={archiveClientCallBack}
           setClientsApiError={setClientsApiErrorCallBack}
-          setApiError={setApiErrorCallBack}
+          setApiError={setClientsApiErrorCallBack}
       />
   )
 }

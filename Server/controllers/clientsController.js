@@ -215,24 +215,19 @@ class clientsController {
     const results = {};
     try {
       for (let key in files) {
-
         const fileNewName = generateFileRandomName(files[key].name);
         newGallery.push(fileNewName);
-
         try {
-          await files[key].mv(`./uploads/clients/${res.client._id}/doneTattooGallery/${fileNewName}`, e => {
+          await fles[key].mv(`./uploads/clients/${res.client._id}/doneTattooGallery/${fileNewName}`, e => {
             if (e) console.log(e);
-          })
-
+          });
         } catch (error) {
           console.error('An error occurred during file move:', error);
-          throw error; // Propagate the error upwards
+          throw error;
         }
       }
-
       const oldData = [...res.client.gallery];
       res.client.gallery = [...oldData, ...newGallery];
-
       results.client = await res.client.save();
       results.resultCode = 0;
       res.json(results);

@@ -27,6 +27,7 @@ type PropsType = {
   isDeletingInProcess: Array<string>;
   styles: Array<StyleType>;
   apiError: null | string;
+  setApiError: () => void;
   setPage: (page: number) => void;
   setPageSize: (limit: number) => void;
 }
@@ -40,6 +41,7 @@ export const Gallery: React.FC<PropsType> = React.memo(({
   isDeletingInProcess,
   styles,
   apiError,
+  setApiError,
   setPage,
   setPageSize,
 }) => {
@@ -76,6 +78,8 @@ export const Gallery: React.FC<PropsType> = React.memo(({
 
   const closeEditGalleryForm = () => {
     setEditGalleryMode(false);
+    console.log("set apitError call back hited!!!!!!")
+    setApiError();
   }
 
   const closeGalleryItemEditModal = () => {
@@ -189,11 +193,14 @@ export const Gallery: React.FC<PropsType> = React.memo(({
         }
         <ModalPopUp
             isOpen={!!galleryItem || editGalleryMode}
-            closeModal={closeGalleryItemEditModal}
             modalTitle={ galleryItem
                          ? 'Update tattoo styles for this image'
                          : `Update you gallery for ${activeStyle?.value}`
             }
+            closeModal={() => {
+                closeGalleryItemEditModal();
+                closeEditGalleryForm();
+            }}
         >
           {  galleryItem &&
               <UpdateGalleryItemForm
@@ -206,6 +213,7 @@ export const Gallery: React.FC<PropsType> = React.memo(({
           }
           {  editGalleryMode &&
               <GalleryUploadForm
+                  apiError={apiError}
                   styleID={activeStyle._id}
                   isEditPortfolio={true}
                   closeModal={closeEditGalleryForm}

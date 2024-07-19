@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useState} from "react";
-import {Field, Form, Formik} from "formik";
+import {Field, Form, Formik, FormikHelpers} from "formik";
 import {MAX_FILE_SIZE, VALID_FILE_EXTENSIONS, isFileSizeValid, isFileTypesValid } from "../../utils/validators";
 import {ReactComponent as TrashIcon} from "../../assets/svg/trash.svg";
 import {API_URL} from "../../http";
@@ -10,6 +10,7 @@ import {ClientType} from "../../types/Types";
 import {useDispatch} from "react-redux";
 import {updateClientGallery} from "../../redux/Clients/clients-reducer";
 import {updateGallery} from "../../redux/Gallery/gallery-reducer";
+import {ApiErrorMessage} from "./formComponents/ApiErrorMessage";
 
 const filesUploadingValidationSchema = Yup.object().shape({
   gallery: Yup.array()
@@ -33,6 +34,7 @@ type FormValues = {
 };
 
 type PropsType = {
+  apiError: string | null;
   styleID?: string;
   isEditPortfolio: boolean;
   client?: ClientType;
@@ -42,6 +44,7 @@ type PropsType = {
 }
 
 export const GalleryUploadForm: React.FC<PropsType> = React.memo(({
+  apiError,
   styleID,
   isEditPortfolio,
   client,
@@ -49,6 +52,7 @@ export const GalleryUploadForm: React.FC<PropsType> = React.memo(({
   deleteClientGalleryPicture,
   closeModal
 }) => {
+  console.log(apiError + "apiError!!!!!!!!");
 
   const [imageURLs, setImageURLs] = useState<{url: string | ArrayBuffer | null, file: File}[]>([]);
 
@@ -77,7 +81,10 @@ export const GalleryUploadForm: React.FC<PropsType> = React.memo(({
     setImageURLs(currentFiles => currentFiles.filter(({file}) => file !== fileToDelete));
   };
 
-  const submit = async (values: FormValues, formikHelpers: any) => {
+  const submit = async (
+      values: FormValues,
+      formikHelpers: FormikHelpers<any>,
+  ) => {
     const { setSubmitting, setErrors } = formikHelpers;
 
     if (imageURLs.length === 0 && (isEditPortfolio || client?.gallery?.length === 0)) {
@@ -87,9 +94,14 @@ export const GalleryUploadForm: React.FC<PropsType> = React.memo(({
     }
     const formData = new FormData();
     imageURLs.forEach(({file}) => formData.append(file.name, file));
-    if (isEditPortfolio && styleID !== undefined) await dispatch(updateGallery(styleID, formData));
-    if (!isEditPortfolio && client) await dispatch(updateClientGallery(client?._id, formData));
-    closeModal();
+    let success;
+    if (isEditPortfolio && styleID !== undefined) {
+      success = await dispatch(updateGallery(styleID, formData));
+    } else if (client) {
+      success = await dispatch(updateClientGallery(client._id, formData));
+    }
+    if (success) closeModal();
+    setSubmitting(false);
   };
 
   const initialValues = {
@@ -177,6 +189,9 @@ export const GalleryUploadForm: React.FC<PropsType> = React.memo(({
                 }}
               />
             </FieldWrapper>
+            { !!apiError &&
+                <ApiErrorMessage message={apiError}/>
+            }
             <button
               type="submit"
               disabled={!propsF.dirty || propsF.isSubmitting}

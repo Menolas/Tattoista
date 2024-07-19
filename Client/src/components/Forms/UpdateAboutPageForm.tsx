@@ -79,7 +79,7 @@ export const UpdateAboutPageForm: React.FC<PropsType> =  React.memo(({
         });
         try {
             const response = await dispatch(editAboutPage(formData));
-            if (!response || response.message) { // Check the response here
+            if (!response || response.message) {
                 throw new Error('Error submitting form');
             }
             closeModal();
