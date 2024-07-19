@@ -7,8 +7,7 @@ import {getNewPage} from "../../utils/functions";
 import {
   setSuccessModalAC,
   SetSuccessModalAT,
-  setApiErrorAC,
-  SetApiErrorAT} from "../General/general-reducer";
+} from "../General/general-reducer";
 
 const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
@@ -17,6 +16,7 @@ const TOGGLE_IS_DELETING_IN_PROCESS = 'TOGGLE_IS_DELETING_IN_PROCESS';
 const UPDATE_ARCHIVED_GALLERY_ITEM = 'UPDATE_ARCHIVED_GALLERY_ITEM';
 const SET_ARCHIVED_GALLERY = 'SET_ARCHIVED_GALLERY';
 const DELETE_ARCHIVED_GALLERY_ITEM = 'DELETE_ARCHIVED_GALLERY_ITEM';
+const SET_ARCHIVED_GALLERY_API_ERROR = 'SET_ARCHIVED_GALLERY_API_ERROR';
 
 const EDIT_GALLERY_ITEM_SUCCESS = 'You successfully edited gallery image';
 const RESTORE_GALLERY_ITEM_FROM_ARCHIVE = 'You successfully restored gallery image';
@@ -28,6 +28,7 @@ const initialState = {
   isFetching: false as boolean,
   isDeletingInProcess: [] as Array<string>,
   archivedGallery: [] as Array<GalleryItemType>,
+  archivedGalleryApiError: null as string | null,
 }
 
 export type InitialStateType = typeof initialState;
@@ -99,18 +100,33 @@ export const archivedGalleryReducer = (
         })
       }
 
+    case SET_ARCHIVED_GALLERY_API_ERROR:
+      return {
+        ...state,
+        archivedGalleryApiError: action.error
+      }
+
     default: return {
       ...state
     }
   }
 }
 
-type ActionsTypes = SetApiErrorAT | ToggleIsDeletingInProcessAT |
+type ActionsTypes = ToggleIsDeletingInProcessAT |
     SetSuccessModalAT | SetPageSizeAT | SetCurrentPageAT | SetIsFetchingAT
     | SetArchivedGalleryAT | DeleteArchivedGalleryItemAT |
-    UpdateArchivedGalleryItemAT;
+    UpdateArchivedGalleryItemAT | SetArchivedGalleryApiErrorAT;
 
 // actions creators
+
+type SetArchivedGalleryApiErrorAT = {
+  type: typeof SET_ARCHIVED_GALLERY_API_ERROR;
+  error: string | null;
+}
+
+const setArchivedGalleryApiErrorAC = (error: string | null): SetArchivedGalleryApiErrorAT => ({
+    type: SET_ARCHIVED_GALLERY_API_ERROR, error
+});
 
 type ToggleIsDeletingInProcessAT = {
   type: typeof TOGGLE_IS_DELETING_IN_PROCESS;
@@ -264,7 +280,7 @@ export const updateArchivedGalleryItem = (id: string, values: object): ThunkType
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(updateArchivedGalleryItemAC(response.archivedGalleryItem));
       dispatch(setSuccessModalAC(true, EDIT_GALLERY_ITEM_SUCCESS));
-      dispatch(setApiErrorAC(null));
+      dispatch(setArchivedGalleryApiErrorAC(null));
     }
   } catch (e) {
     const error = e as ApiErrorType;

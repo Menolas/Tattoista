@@ -5,6 +5,7 @@ import {FieldWrapper} from "./formComponents/FieldWrapper";
 import {API_URL} from "../../http";
 import {useDispatch} from "react-redux";
 import {updateGalleryItem} from "../../redux/Gallery/gallery-reducer";
+import {ApiErrorMessage} from "./formComponents/ApiErrorMessage";
 
 type InitialValuesType = {
     [key: string]: boolean;
@@ -15,7 +16,8 @@ type PropsType = {
     folder: string;
     galleryItem: GalleryItemType;
     styles: Array<StyleType>;
-    closeModal: () => void;
+    apiError: string;
+    closeModal?: () => void;
 }
 
 export const UpdateGalleryItemForm: React.FC<PropsType> = React.memo(({
@@ -23,11 +25,10 @@ export const UpdateGalleryItemForm: React.FC<PropsType> = React.memo(({
     folder,
     galleryItem,
     styles,
-    closeModal
+    apiError,
+    closeModal,
 }) => {
 
-    console.log('galleryItem.tattooStyles as string:', JSON.stringify(galleryItem.tattooStyles, null, 2));
-    console.log('styles as string:', JSON.stringify(styles, null, 2));
     const dispatch = useDispatch();
 
     const submit = async (values: InitialValuesType) => {
@@ -81,6 +82,9 @@ export const UpdateGalleryItemForm: React.FC<PropsType> = React.memo(({
 
                         </div>
                         {tattooStyles}
+                        { !!apiError &&
+                            <ApiErrorMessage message={apiError}/>
+                        }
                         <button
                             type="submit"
                             disabled={!propsF.dirty || isSubmitting}

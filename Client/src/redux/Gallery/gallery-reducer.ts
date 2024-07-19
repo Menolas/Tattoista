@@ -8,8 +8,6 @@ import { gallery } from "../../data/GalleryData";
 import {
   setSuccessModalAC,
   SetSuccessModalAT,
-  setApiErrorAC,
-  SetApiErrorAT
 } from "../General/general-reducer";
 
 const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
@@ -20,6 +18,7 @@ const SET_GALLERY = 'SET_GALLERY';
 const UPDATE_GALLERY = 'UPDATE_GALLERY';
 const UPDATE_GALLERY_ITEM = 'UPDATE_GALLERY_ITEM';
 const DELETE_GALLERY_ITEM = 'DELETE_GALLERY_ITEM';
+const SET_API_ERROR = 'SET_API_ERROR';
 
 const ADD_GALLERY_ITEMS_SUCCESS = 'You successfully added gallery images';
 const EDIT_GALLERY_ITEM_SUCCESS = 'You successfully edited gallery image';
@@ -31,6 +30,7 @@ const initialState = {
   isFetching: false as boolean,
   isDeletingInProcess: [] as Array<string>,
   gallery: [] as GalleryItemType[],
+  apiError: null as string | null,
 }
 
 export type InitialStateType = typeof initialState;
@@ -116,13 +116,19 @@ export const galleryReducer = (
         .filter((item): item is GalleryItemType => item !== null),
       }
 
+    case SET_API_ERROR:
+      return {
+        ...state,
+        apiError: action.error
+      }
+
     default: return {
       ...state
     }
   }
 }
 
-type ActionsTypes = SetApiErrorAT | ToggleIsDeletingInProcessAT | SetSuccessModalAT |
+type ActionsTypes = ToggleIsDeletingInProcessAT | SetSuccessModalAT |
     SetGalleryPageSizeAT | SetCurrentGalleryPageAT | SetIsFetchingAT | SetGalleryAT
     | UpdateGalleryAT | DeleteGalleryItemAT | UpdateGalleryItemAT;
 
@@ -243,6 +249,7 @@ export const getGallery = (
     const response = await galleryApi.getGalleryItems(styleId, currentPage, pageSize)
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(setGalleryAC(response.gallery, response.totalCount));
+      dispatch(setApiErrorAC(null));
       return true;
     } else {
       return false;
@@ -270,8 +277,8 @@ export const updateGallery = (
     const response = await galleryApi.adminUpdateGallery(tattooStyle, values);
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(updateGalleryAC(response.gallery));
-      setApiErrorAC(null);
       dispatch(setSuccessModalAC(true, ADD_GALLERY_ITEMS_SUCCESS));
+      dispatch(setApiErrorAC(null));
       return true;
     } else {
       return false;
@@ -348,6 +355,7 @@ export const updateGalleryItem = (
     if (response.resultCode === ResultCodesEnum.Success) {
       dispatch(updateGalleryItemAC(response.galleryItem, values[activeStyleId]));
       dispatch(setSuccessModalAC(true, EDIT_GALLERY_ITEM_SUCCESS));
+      dispatch(setApiErrorAC(null));
       return true;
     } else {
       return false;
